@@ -4,7 +4,7 @@
         <title>Laravel</title>
 
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-
+        <script type="text/javascript" src="js/jQuery/jquery-3.2.1.min.js"></script>
         <style>
             html, body {
                 height: 100%;
@@ -42,4 +42,11 @@
             </div>
         </div>
     </body>
+
+    <script>
+        $(document).ready(function () {
+            alert('wow');
+        })
+    </script>
 </html>
+
