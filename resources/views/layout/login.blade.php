@@ -4,6 +4,9 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta name="language" content="en"/>
 
+    <link rel="shortcut icon" href="public/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="public/favicon.ico" type="image/x-icon">
+
     <title>
         SID {!! isset($tituloPagina)?' | '.$tituloPagina:null !!}
     </title>
@@ -49,8 +52,8 @@
 
                 <div class="row">
                     <div class="input-field col s10 offset-m1">
-                        <input id="password" name="password" type="password" class="validate">
-                        <label for="password">Contrase&ntilde;a</label>
+                        <input id="clave" name="clave" type="password" class="validate">
+                        <label for="clave">Contrase&ntilde;a</label>
                     </div>
                 </div>
 
@@ -75,7 +78,8 @@
                 new PNotify({
                     title: '{{Session::get('mensaje')['titulo']}}',
                     text: '{{Session::get('mensaje')['msg']}}',
-                    type: '{{Session::get('mensaje')['class']}}'
+                    type: '{{Session::get('mensaje')['class']}}',
+                    icon: false
                 });
             @endif
         });

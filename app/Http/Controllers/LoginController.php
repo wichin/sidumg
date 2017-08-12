@@ -2,14 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CAT_CATEGORIA;
+use App\Models\TB_MODULO;
+use App\Models\TB_USUARIO;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
+    private $Usuario;
+
+    public function __construct()
+    {
+        $this->Usuario = new TB_USUARIO();
+    }
+
+
     public function Index(Request $request)
     {
         if($this->CheckSession())
@@ -33,7 +45,7 @@ class LoginController extends Controller
                 }
                 else
                 {
-                    $info = ['titulo'=>'ACCESO DENEGADO','msg'=>'El nombre de usuario y la contraseña que ingresaste no coinciden con nuestros registros.','class'=>'error'];
+                    $info = ['titulo'=>'ACCESO DENEGADO','msg'=>'El nombre de usuario y la contraseña que ingresaste no coinciden con nuestros registros.','class'=>'danger'];
                     Session::flash('mensaje',$info);
 
                     $tituloPagina = 'Inicio de Sesi&oacute;n';
@@ -48,7 +60,7 @@ class LoginController extends Controller
         $usuario = Session::get('usuario');
 
         $tituloPagina = 'Inicio';
-        return view('welcome',get_defined_vars());
+        return view('layout.main',get_defined_vars());
     }
 
     public function CheckSession()
@@ -61,39 +73,69 @@ class LoginController extends Controller
         $usuario = $request->usuario;
         $clave   = md5($request->clave);
 
-        if($usuario == 'wii')
+        if(isset($usuario)&&isset($clave))
         {
-            $data = ['nombres'=>'wii','id'=>'1', 'email'=>'mail@wii.com'];
-            Session::put('usuario',$data);
-            return true;
+            $Check   = $this->Usuario->Check($usuario, $clave,1);
+
+            if(isset($Check) && count($Check) > 0)
+            {
+                $idUsuario = $Check[0]->id;
+                $Menus   = $this->GetMenu($idUsuario);
+
+                $data = [
+                    'nombres'   => $Check[0]->Persona->nombres.' '.$Check[0]->Persona->apellidos,
+                    'id'        => $Check[0]->id,
+                    'email'     => $Check[0]->correo,
+                    'menu'      => $Menus
+                ];
+                Session::put('usuario',$data);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
             return false;
         }
+    }
 
+    public function GetMenu($idUsuario)
+    {
+        $Menus = $this->Usuario->MenusUsuario($idUsuario);
 
-
-
-        /*
-        $query = DB::table('tb_usuario')
-            ->join('tb_persona', 'tb_persona.cui', '=', 'tb_usuario.cui_persona')
-            ->select('tb_usuario.id','tb_usuario.email','tb_persona.nombres','tb_persona.apellidos')
-            ->where('tb_usuario.email',$usuario)
-            ->where('tb_usuario.password',$clave)
-            ->where('tb_usuario.estado',1)
-            ->get();
-
-        if(isset($query) && count($query) > 0)
+        if(isset($Menus[0]->Rol->AccesoRol)&&count($Menus[0]->Rol->AccesoRol)>0)
         {
-            $data = ['nombres'=>$query[0]->nombres.' '.$query[0]->apellidos,'id'=>$query[0]->id, 'email'=>$query[0]->email];
-            Session::put('usuario',$data);
-            return true;
+            $data = [];
+            $i    = 0;
+            foreach ($Menus[0]->Rol->AccesoRol as $item)
+            {
+                if($item->Menu->Modulo->estado==1 && $item->Menu->estado==1)
+                {
+                    $data[$i]['idModulo']       = $item->Menu->Modulo->id;
+                    $data[$i]['nomModulo']      = $item->Menu->Modulo->nombre;
+                    $data[$i]['clase']          = $item->Menu->Modulo->clase;
+                    $data[$i]['idMenu']         = $item->Menu->id;
+                    $data[$i]['nomMenu']        = $item->Menu->nombre;
+                    $data[$i]['url']            = $item->Menu->url;
+                    $i++;
+                }
+            }
+
+            if(count($data)>0)
+            {
+                $miCollect  = collect($data);
+                $data       = json_decode($miCollect->groupBy('idModulo'));
+            }
+
+            return $data;
         }
         else
         {
-            return false;
-        }*/
+            return [];
+        }
     }
 
     public function Logout()

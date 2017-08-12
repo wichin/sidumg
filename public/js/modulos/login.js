@@ -9,10 +9,15 @@ $(document).ready(function () {
                 .attr('data-error', error.text());
         },
         submitHandler: function (form) {
-            $.alert({
-                title: 'Alert!',
-                content: 'Simple alert!',
+            $.dialog({
+                icon: 'fa fa-circle-o-notch',
+                columnClass: 'col s4 m4 l4 offset-s4 offset-m4 offset-l4',
+                title: 'AUTENTICACION',
+                content: 'Procesando Información...',
+                type: 'blue',
+                theme: 'modern'
             });
+            form.submit();
         }
     });
 
