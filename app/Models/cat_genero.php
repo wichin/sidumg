@@ -13,6 +13,11 @@ class CAT_GENERO extends Model
     {
         return $this->hasMany('App\Models\TB_PERSONA','id_genero','id');
     }
+    
+    public function Articulo()
+    {
+        return $this->hasMany('App\Models\TB_ARTICULO','id_genero','id');
+    }
 
     public function GetGenero($estado=null)
     {

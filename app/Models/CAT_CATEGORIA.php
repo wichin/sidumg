@@ -10,6 +10,11 @@ class CAT_CATEGORIA extends Model
     protected $table = 'CAT_CATEGORIA';
     public $timestamps = false;
 
+    public function Articulo()
+    {
+        return $this->hasMany('App\Models\TB_ARTICULO','id_categoria','id');
+    }
+
     public function GetCategoria($estado=null)
     {
         return $this->where(function ($sql) use ($estado){

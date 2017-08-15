@@ -1,25 +1,31 @@
 @extends('layout.main')
+
+@section('css')
+    {!! Html::style('assets/datatable/css/dataTables.material.min.css') !!}
+@stop
+
 @section('contenido')
     <h4 class="blue-text text-darken-4">{{$titulo}}</h4>
     <hr><br>
     <div class="row">
-        <form action="{{url('inventario/crearCategoria')}}" method="post" id="frmCategoria">
+        <form action="{{url('inventario/crearCategoria')}}" method="post">
             <div class="col s12 m7 l7 input-field">
-                <input type="text" class="validate" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre" class="validate" required="" aria-required="true">
                 <label for="nombres" data-error="Debe ingresar el Nombre de la Categoría">Nombre Categoría</label>
             </div>
             <div class="col s12 m5 l5">
                 <br>
-                <button class="waves-effect waves-light btn blue darken-4 secondary-content" type="button" id="btnCategoria">GUARDAR
+                <button class="waves-effect waves-light btn blue darken-4 secondary-content" type="submit" id="btnCategoria">GUARDAR
                     <i class="material-icons right">save</i>
                 </button>
             </div>
             <input type="hidden" id="token" name="_token" value="{!! csrf_token() !!}">
         </form>
     </div>
+    <br><hr><br>
     <div class="row">
         @if(isset($dataCategoria)&&count($dataCategoria)>0)
-            <table class="responsive-table bordered">
+            <table class="bordered" id="tblCategoria">
                 <thead>
                 <tr>
                     <th>Nombre</th>
@@ -40,31 +46,16 @@
 @stop
 
 @section('js')
+    {!! Html::script('assets/datatable/js/jquery.dataTables.min.js') !!}
+    {!! Html::script('assets/datatable/js/dataTables.material.min.js') !!}
     <script>
         $(document).ready(function () {
             $('.tooltipped').tooltip({delay: 50});
-        });
 
-        $(document).on('click','#btnCategoria',function (e)
-        {
-            e.preventDefault();
-            $.confirm({
-                icon: 'fa fa-question',
-                title: 'CREAR CATEGORIA',
-                content: '¿Confirma que desea crear una nueva Categoría?',
-                theme: 'modern',
-                type: 'blue',
-                columnClass: 'col s4 m4 l4 offset-s4 offset-m4 offset-l4',
-                buttons: {
-                    Cancelar: function () {},
-                    Aceptar: {
-                        text: 'Aceptar',
-                        btnClass: 'btn-blue',
-                        action: function(){
-                            $('#frmCategoria').submit();
-                        }
-                    }
-                }
+            $('#tblCategoria').DataTable({
+                responsive: true,
+                lengthChange: false,
+                searching: true
             });
         });
     </script>

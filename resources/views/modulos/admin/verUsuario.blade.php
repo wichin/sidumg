@@ -1,15 +1,21 @@
 @extends('layout.main')
+
+@section('css')
+    {!! Html::style('assets/datatable/css/dataTables.material.min.css') !!}
+@stop
+
 @section('contenido')
     <h4 class="blue-text text-darken-4">{{$titulo}}</h4>
     <hr><br>
     <div class="row">
         @if(isset($dataUsuario)&&count($dataUsuario)>1)
-            <table class="responsive-table bordered">
+            <table class="bordered" id="tblUsuarios">
                 <thead>
                 <tr>
                     <th>Acción</th>
                     <th>Estado</th>
                     <th>Nombre</th>
+                    <th>Local</th>
                     <th>Correo</th>
                     <th>Tipo</th>
                     <th>Rol</th>
@@ -35,6 +41,7 @@
                             </td>
                             <td>{{$dt->EstadoUsuario->nombre}}</td>
                             <td>{{$dt->Persona->nombres.' '.$dt->Persona->apellidos}}</td>
+                            <td>{{$dt->Local->nombre}}</td>
                             <td>{{$dt->correo}}</td>
                             <td>{{$dt->TipoUsuario->nombre}}</td>
                             <td>{{$dt->Rol->nombre}}</td>
@@ -54,9 +61,17 @@
 @stop
 
 @section('js')
+    {!! Html::script('assets/datatable/js/jquery.dataTables.min.js') !!}
+    {!! Html::script('assets/datatable/js/dataTables.material.min.js') !!}
     <script>
         $(document).ready(function () {
             $('.tooltipped').tooltip({delay: 50});
+
+            $('#tblUsuarios').DataTable({
+                responsive: true,
+                lengthChange: false,
+                searching: false
+            });
         });
 
         function ChangeStatus(sta, usr) {

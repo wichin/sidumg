@@ -10,6 +10,11 @@ class CAT_COLOR extends Model
     protected $table = 'CAT_COLOR';
     public $timestamps = false;
 
+    public function Articulo()
+    {
+        return $this->hasMany('App\Models\TB_ARTICULO','id_color','id');
+    }
+
     public function GetColor($estado=null)
     {
         return $this->where(function ($sql) use ($estado){

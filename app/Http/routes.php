@@ -17,6 +17,8 @@ Route::group(['middleware' => ['sesion']], function () {
         Route::post('crearUsuario', 'AdminController@InitCrearUsuario');
         Route::get ('verUsuario', 'AdminController@InitVerUsuario');
         Route::post('cambioEstado','AdminController@CambioEstadoUsuario');
+        Route::get ('gestionLocal','AdminController@InitGestionLocal');
+        Route::post('gestionLocal','AdminController@InitGestionLocal');
     });
 
     Route::group(['prefix' => 'inventario','namespace' => 'Inv'], function ()
@@ -26,5 +28,13 @@ Route::group(['middleware' => ['sesion']], function () {
 
         Route::get ('crearArticulo', 'InventarioController@InitCrearArticulo');
         Route::post('crearArticulo', 'InventarioController@InitCrearArticulo');
+
+        Route::get ('ingresoProveedor','InventarioController@InitIngresoProveedor');
+        Route::post('ingresoProveedor','InventarioController@InitIngresoProveedor');
+        Route::get ('buscaArticulo','InventarioController@InitBuscaArticulo');
+
+        Route::get ('trasladoArticulo','InventarioController@InitTrasladoArticulo');
+        Route::post('trasladoArticulo','InventarioController@InitTrasladoArticulo');
+        Route::get ('buscaArticuloBodega','InventarioController@InitBuscaArticuloBodega');
     });
 });

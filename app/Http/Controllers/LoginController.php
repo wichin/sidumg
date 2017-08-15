@@ -65,7 +65,21 @@ class LoginController extends Controller
 
     public function CheckSession()
     {
-        return Session::has('usuario');
+        if(Session::has('usuario'))
+        {
+            $temporal   = Session::get('usuario');
+            $idUsuario  = $temporal['id'];
+            $Menus      = $this->GetMenu($idUsuario);
+            $temporal['menu'] = $Menus;
+
+            Session::put('usuario',$temporal);
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public function CheckLogin($request)
@@ -86,7 +100,8 @@ class LoginController extends Controller
                     'nombres'   => $Check[0]->Persona->nombres.' '.$Check[0]->Persona->apellidos,
                     'id'        => $Check[0]->id,
                     'email'     => $Check[0]->correo,
-                    'menu'      => $Menus
+                    'menu'      => $Menus,
+                    'local'     => $Check[0]->Local
                 ];
                 Session::put('usuario',$data);
                 return true;

@@ -12,6 +12,11 @@ class TB_USUARIO extends Model
     protected $table = 'TB_USUARIO';
     public $timestamps = false;
 
+    public function MovimientoInventario()
+    {
+        return $this->hasMany('App\Models\TB_MOVIMIENTO_INVENTARIO','id_usuario','id');
+    }
+
     public function Persona()
     {
         return $this->belongsTo('App\Models\TB_PERSONA','id_persona','id');
@@ -32,6 +37,11 @@ class TB_USUARIO extends Model
         return $this->belongsTo('App\Models\CAT_TIPO_USUARIO','id_tipo_usuario','id');
     }
 
+    public function Local()
+    {
+        return $this->belongsTo('App\Models\TB_LOCAL','id_local','id');
+    }
+
 
     /**
      * VALIDA LAS CREDENCIALES DEL USUARIO
@@ -42,7 +52,7 @@ class TB_USUARIO extends Model
      */
     public function Check($usuario, $clave = null, $estado = null)
     {
-        return $this->with('Persona')
+        return $this->with('Persona','Local')
             ->where('correo',$usuario)
             ->where(function ($sqlClave) use($clave){
                 if(isset($clave))
@@ -73,7 +83,7 @@ class TB_USUARIO extends Model
 
     public function ListaUsuarios($idUsuario = null, $estado = null)
     {
-        return $this->with('Persona','Rol','TipoUsuario','EstadoUsuario')
+        return $this->with('Persona','Rol','TipoUsuario','Local','EstadoUsuario')
             ->where(function ($sqlUser) use ($idUsuario){
                 if(isset($idUsuario))
                 {
@@ -137,6 +147,7 @@ class TB_USUARIO extends Model
                     'id_persona'        => $insertPersona,
                     'id_rol'            => $data->rol,
                     'id_tipo_usuario'   => $data->tipoUsuario,
+                    'id_local'          => $data->local,
                     'id_estado'         => 1,
                     'usuario_creacion'  => $idUser,
                     'fecha_creacion'    => $hoy

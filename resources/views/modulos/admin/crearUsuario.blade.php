@@ -5,11 +5,11 @@
     <form action="{{url('admin/crearUsuario')}}" method="POST">
         <div class="row">
             <div class="col s12 m4 l4 input-field">
-                <input type="text" class="validate" id="nombres" name="nombres" required>
+                <input type="text" id="nombres" name="nombres" class="validate" required="" aria-required="true">
                 <label for="nombres" data-error="Debe ingresar el Nombre">Nombres</label>
             </div>
             <div class="col s12 m4 l4 input-field">
-                <input type="text" class="validate" id="apellidos" name="apellidos" required>
+                <input type="text" id="apellidos" name="apellidos" class="validate" required="" aria-required="true">
                 <label for="apellidos">Apellidos</label>
             </div>
             <div class="col s12 m4 l4 input-field">
@@ -19,12 +19,12 @@
         </div>
         <div class="row">
             <div class="col s12 m4 l4 input-field">
-                <input type="email" class="validate" id="correo" name="correo" required>
+                <input type="email" id="correo" name="correo" class="validate" required="" aria-required="true">
                 <label for="correo">Correo electrónico</label>
             </div>
             <div class="col s12 m4 l4 input-field">
-                <select class="validate" id="rol" name="rol" required>
-                    <option value="" disabled selected>Seleccione una opción</option>
+                <select id="rol" name="rol" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected>Seleccione...</option>
                     @if(isset($selectRol)&&count($selectRol)>0)
                         @foreach($selectRol as $s)
                         <option value="{{$s->id}}">{{$s->nombre}}</option>
@@ -34,8 +34,8 @@
                 <label>Rol</label>
             </div>
             <div class="col s12 m4 l4 input-field">
-                <select class="validate" id="tipoUsuario" name="tipoUsuario" required>
-                    <option value="" disabled selected>Seleccione una opción</option>
+                <select id="tipoUsuario" name="tipoUsuario" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected>Seleccione...</option>
                     @if(isset($selectTipoUsuario)&&count($selectTipoUsuario)>0)
                         @foreach($selectTipoUsuario as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
@@ -47,8 +47,19 @@
         </div>
 
         <div class="row">
-            <div class="col s12 m12 l12 input-field">
-                <input type="text" class="validate" id="direccion" name="direccion">
+            <div class="col s12 m4 l4 input-field">
+                <select id="local" name="local" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected>Seleccione...</option>
+                    @if(isset($selectLocal)&&count($selectLocal)>0)
+                        @foreach($selectLocal as $s)
+                            <option value="{{$s->id}}">{{$s->nombre}}</option>
+                        @endforeach
+                    @endif
+                </select>
+                <label for="local">Local</label>
+            </div>
+            <div class="col s8 m8 l8 input-field">
+                <input type="text" id="direccion" name="direccion">
                 <label for="direccion">Direcci&oacute;n</label>
             </div>
         </div>
@@ -64,7 +75,7 @@
             </div>
             <div class="col s12 m4 l4 input-field">
                 <select id="tipoDocumento" name="tipoDocumento">
-                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="" disabled selected>Seleccione...</option>
                     @if(isset($selectTipoDoc)&&count($selectTipoDoc)>0)
                         @foreach($selectTipoDoc as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
@@ -76,19 +87,19 @@
         </div>
         <div class="row">
             <div class="col s12 m3 l3 input-field">
-                <select id="genero" name="genero" required>
-                    <option value="" disabled selected>Seleccione una opción</option>
+                <select id="genero" name="genero" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected>Seleccione una opción...</option>
                     @if(isset($selectGenero)&&count($selectGenero)>0)
                         @foreach($selectGenero as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
                         @endforeach
                     @endif
                 </select>
-                <label for="genero">Genero</label>
+                <label>Genero</label>
             </div>
             <div class="col s12 m3 l3 input-field">
                 <select id="nacionalidad" name="nacionalidad">
-                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="" disabled selected>Seleccione...</option>
                     @if(isset($selectNac)&&count($selectNac)>0)
                         @foreach($selectNac as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
@@ -123,28 +134,5 @@
 @stop
 
 @section('js')
-<script>
-    $(document).ready(function () {
-        $('select').material_select();
-
-        $('.datepicker').pickadate({
-            selectMonths: false, // Creates a dropdown to control month
-            selectYears: 100, // Creates a dropdown of 15 years to control year,
-            today: 'Hoy',
-            clear: 'Limpiar',
-            close: 'Aceptar',
-            closeOnSelect: true, // Close upon selecting a date,
-            format: 'dd/mm/yyyy',
-
-            monthsFull: [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ],
-            monthsShort: [ 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
-            weekdaysFull: [ 'Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado' ],
-            weekdaysShort: [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab' ],
-
-            weekdaysLetter: [ 'D', 'L', 'M', 'X', 'J', 'V', 'S' ]
-        });
-    })
-
-</script>
-
+    {!! Html::script('js/modulos/admin/crearUsuario.js') !!}
 @stop

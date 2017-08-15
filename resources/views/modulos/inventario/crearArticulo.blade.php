@@ -3,22 +3,23 @@
     <h4 class="blue-text text-darken-4">{{$titulo}}</h4>
     <hr><br>
 
-    <form action="{{url('inventario/crearArticulo')}}" method="post" id="frmArticulo">
+    <form action="{{url('inventario/crearArticulo')}}" method="post">
         <div class="row">
             <div class="input-field col s12 m3 l3">
                 <i class="material-icons prefix">Q</i>
-                <input type="number" class="validate" id="precio" name="precio" required>
+                <input type="number" id="precio" name="precio" class="validate" required="" aria-required="true">
                 <label for="precio" data-error="Debe ingresar el valor del artículo">Precio Venta</label>
             </div>
             <div class="input-field col s12 m9 l9">
-                <input type="text" class="validate" id="descripcion" name="descripcion" disabled>
-                <label for="descripcion">Descripción</label>
+                <input type="text" id="desc-visible" name="desc-visible" style="color: black;" disabled>
+                <input type="hidden" id="descripcion" name="descripcion">
+                <label class="active">Descripción</label>
             </div>
         </div>
         <div class="row">
             <div class="col s12 m4 l4 input-field">
-                <select id="categoria" name="categoria">
-                    <option value="" disabled selected>Seleccione una opción</option>
+                <select class="data-articulo" id="categoria" name="categoria" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected></option>
                     @if(isset($selectCategoria)&&count($selectCategoria)>0)
                         @foreach($selectCategoria as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
@@ -28,8 +29,8 @@
                 <label for="categoria">Categoría</label>
             </div>
             <div class="col s12 m4 l4 input-field">
-                <select id="deporte" name="deporte">
-                    <option value="" disabled selected>Seleccione una opción</option>
+                <select class="data-articulo" id="deporte" name="deporte" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected></option>
                     @if(isset($selectDeporte)&&count($selectDeporte)>0)
                         @foreach($selectDeporte as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
@@ -39,8 +40,8 @@
                 <label for="deporte">Deporte</label>
             </div>
             <div class="col s12 m4 l4 input-field">
-                <select id="marca" name="marca">
-                    <option value="" disabled selected>Seleccione una opción</option>
+                <select class="data-articulo" id="marca" name="marca" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected></option>
                     @if(isset($selectMarca)&&count($selectMarca)>0)
                         @foreach($selectMarca as $s)
                             <option value="{{$s->id}}">{{$s->nombre_comercial}}</option>
@@ -52,8 +53,8 @@
         </div>
         <div class="row">
             <div class="col s12 m4 l4 input-field">
-                <select id="genero" name="genero">
-                    <option value="" disabled selected>Seleccione una opción</option>
+                <select class="data-articulo" id="genero" name="genero" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected></option>
                     @if(isset($selectGenero)&&count($selectGenero)>0)
                         @foreach($selectGenero as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
@@ -63,8 +64,8 @@
                 <label for="genero">Genero</label>
             </div>
             <div class="col s12 m4 l4 input-field">
-                <select id="color" name="color">
-                    <option value="" disabled selected>Seleccione una opción</option>
+                <select class="data-articulo" id="color" name="color" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected></option>
                     @if(isset($selectColor)&&count($selectColor)>0)
                         @foreach($selectColor as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
@@ -74,8 +75,8 @@
                 <label for="color">Color</label>
             </div>
             <div class="col s12 m4 l4 input-field">
-                <select id="talla" name="talla">
-                    <option value="" disabled selected>Seleccione una opción</option>
+                <select class="data-articulo" id="talla" name="talla" class="validate" required="" aria-required="true">
+                    <option value="" disabled selected></option>
                     @if(isset($selectTalla)&&count($selectTalla)>0)
                         @foreach($selectTalla as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
@@ -90,7 +91,7 @@
                 <button class="waves-effect waves-light btn" type="button" id="clean" name="clean">LIMPIAR
                     <i class="material-icons right">clear</i>
                 </button>
-                <button class="waves-effect waves-light btn blue darken-4 secondary-content" type="submit" name="action">ACEPTAR
+                <button class="waves-effect waves-light btn blue darken-4 secondary-content" type="submit" id="btnArticulo">ACEPTAR
                     <i class="material-icons right">check</i>
                 </button>
             </div>
@@ -101,35 +102,5 @@
 @stop
 
 @section('js')
-    <script>
-        $(document).ready(function () {
-            $('.tooltipped').tooltip({delay: 50});
-            $('select').material_select();
-            $('#descripcion').val('Zapatos');
-        });
-
-        $(document).on('click','#btnCategoria',function (e)
-        {
-            e.preventDefault();
-            $.confirm({
-                icon: 'fa fa-question',
-                title: 'CREAR ARTICULO',
-                content: '¿Confirma que desea crear una nueva Categoría?',
-                theme: 'modern',
-                type: 'blue',
-                columnClass: 'col s4 m4 l4 offset-s4 offset-m4 offset-l4',
-                buttons: {
-                    Cancelar: function () {},
-                    Aceptar: {
-                        text: 'Aceptar',
-                        btnClass: 'btn-blue',
-                        action: function(){
-                            $('#frmArticulo').submit();
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-
+    {!! Html::script('js/modulos/inventario/crearArticulo.js') !!}
 @stop

@@ -31,6 +31,10 @@
                 padding-left: 0;
             }
         }
+
+        .ilike-blue-container {
+            @extend .blue, .lighten-4;
+        }
     </style>
 </head>
 <body>
@@ -79,7 +83,7 @@
 </header>
 
 <main>
-    <div class="{{isset($isLarge)&&$isLarge?'max-container':'container'}}">
+    <div class="{{isset($isLarge)&&$isLarge?'max-container':'container'}}" style="min-height: 550px;">
         <div class="row">
             <div class="section col s12 m12 l12">
                 @section('contenido')
@@ -97,7 +101,7 @@
     <div class="footer-copyright">
         <div class="container">
             © 2017 UMG, Ingeniería en Sistemas.
-            <a class="grey-text text-lighten-4 right" href="https://github.com/Dogfalo/materialize/blob/master/LICENSE">MIT License</a>
+            <a class="grey-text text-lighten-4 right" href="{{url('/logout')}}">Cerrar Sesi&oacute;n</a>
         </div>
     </div>
 </footer>
