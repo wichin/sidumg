@@ -35,6 +35,21 @@ Route::group(['middleware' => ['sesion']], function () {
 
         Route::get ('trasladoArticulo','InventarioController@InitTrasladoArticulo');
         Route::post('trasladoArticulo','InventarioController@InitTrasladoArticulo');
-        Route::get ('buscaArticuloBodega','InventarioController@InitBuscaArticuloBodega');
+        Route::get ('buscaArticuloLocal','InventarioController@InitBuscaArticuloLocal');
+    });
+
+    Route::group(['prefix' => 'factura','namespace' => 'Factura'], function ()
+    {
+        Route::get ('agregarAutorizacion', 'FacturaController@InitAgregarAutorizacion');
+        Route::post('agregarAutorizacion', 'FacturaController@InitAgregarAutorizacion');
+        
+        Route::get ('crearCliente','FacturaController@InitCrearCliente');
+        Route::post('crearCliente','FacturaController@InitCrearCliente');
+
+        Route::get ('crearFactura','FacturaController@InitCrearFactura');
+        Route::post('crearFactura','FacturaController@InitCrearFactura');
+        Route::get ('buscarClienteNombre','FacturaController@InitBuscarClienteNombre');
+        Route::get ('buscarClienteDoc','FacturaController@InitBuscarClienteDoc');
+        Route::get ('buscaArticuloLocal','FacturaController@InitBuscaArticuloLocal');
     });
 });

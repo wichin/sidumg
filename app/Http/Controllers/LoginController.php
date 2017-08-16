@@ -40,7 +40,6 @@ class LoginController extends Controller
             {
                 if ($this->CheckLogin($request))
                 {
-                    $tituloPagina = 'Inicio';
                     return redirect('/inicio');
                 }
                 else
@@ -60,7 +59,7 @@ class LoginController extends Controller
         $usuario = Session::get('usuario');
 
         $tituloPagina = 'Inicio';
-        return view('layout.main',get_defined_vars());
+        return view('layout.inicio',get_defined_vars());
     }
 
     public function CheckSession()

@@ -155,9 +155,25 @@ class TB_USUARIO extends Model
 
                 if($insertUsuario)
                 {
-                    $info = ['titulo'=>'USUARIO CREADO','msg'=>'El usuario fue creado con éxito.','class'=>'info'];
-                    Session::flash('mensaje',$info);
-                    DB::commit();
+                    $dataCliente['id_persona']          = $insertPersona;
+                    $dataCliente['id_tipo_cliente']     = 1;
+                    $dataCliente['usuario_creacion']    = $idUser;
+                    $dataCliente['fecha_creacion']      = $hoy;
+
+                    $Cliente = new TB_CLIENTE();
+
+                    if($Cliente->SetCliente($dataCliente))
+                    {
+                        $info = ['titulo'=>'USUARIO CREADO','msg'=>'El usuario fue creado con éxito.','class'=>'info'];
+                        Session::flash('mensaje',$info);
+                        DB::commit();
+                    }
+                    else
+                    {
+                        $info = ['titulo'=>'PROCESO INCOMPLETO','msg'=>'No fue posible la creación del usuario en proceso final.','class'=>'danger'];
+                        Session::flash('mensaje',$info);
+                        DB::rollBack();
+                    }
                 }
                 else
                 {

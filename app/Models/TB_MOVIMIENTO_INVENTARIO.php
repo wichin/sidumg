@@ -15,6 +15,11 @@ class TB_MOVIMIENTO_INVENTARIO extends Model
     {
         return $this->hasMany('App\Models\TB_INGRESO_PROVEEDOR','id_movimiento','id');
     }
+    
+    public function MovimientoLocal()
+    {
+        return $this->hasMany('App\Models\TB_MOVIMIENTO_LOCAL','id_movimiento','id');
+    }
 
     public function TipoTransaccion()
     {
@@ -31,7 +36,18 @@ class TB_MOVIMIENTO_INVENTARIO extends Model
         return $this->belongsTo('App\Models\TB_USUARIO','id_usuario','id');
     }
 
-    public function InsertIngresoProveedor($data)
+    public function SetMovimiento($data)
+    {
+        return $this->insertGetId([
+            'id_transaccion'    => $data['id_transaccion'],
+            'id_articulo'       => $data['id_articulo'],
+            'cantidad'          => $data['cantidad'],
+            'fecha'             => $data['fecha'],
+            'id_usuario'        => $data['id_usuario']
+        ]);
+    }
+
+    public function TransaccionIngresoProveedor($data)
     {
         DB::beginTransaction();
 
@@ -41,13 +57,7 @@ class TB_MOVIMIENTO_INVENTARIO extends Model
         
         foreach ($data as $d => $dt)
         {
-            $idMov = $this->insertGetId([
-                'id_transaccion'    => $dt['id_transaccion'],
-                'id_articulo'       => $dt['id_articulo'],
-                'cantidad'          => $dt['cantidad'],
-                'fecha'             => $dt['fecha'],
-                'id_usuario'        => $dt['id_usuario']
-            ]);
+            $idMov = $this->SetMovimiento($dt);
 
             $validaMov[$d]  = $idMov?1:0;
             $data[$d]['movimiento'] = $idMov;
@@ -71,6 +81,74 @@ class TB_MOVIMIENTO_INVENTARIO extends Model
                     $Inventario = new TB_INVENTARIO();
 
                     $insertInv = $Inventario->TransaccionProveedor($dt);
+
+                    $validaInv[$d] = $insertInv?1:0;
+                }
+
+                if(!in_array(0,$validaInv))
+                {
+                    $info = ['titulo'=>'PROCESO EXITOSO','msg'=>'El ingreso de proveedor fue realizado exitosamente','class'=>'info'];
+                    Session::flash('mensaje',$info);
+                    DB::commit();
+                }
+                else
+                {
+                    $info = ['titulo'=>'PROCESO INCOMPLETO','msg'=>'No fue posible registrar la Actualización de Inventario','class'=>'danger'];
+                    Session::flash('mensaje',$info);
+                    DB::rollback();
+                }
+            }
+            else
+            {
+                $info = ['titulo'=>'PROCESO INCOMPLETO','msg'=>'No fue posible registrar el Ingreso de Proveedor','class'=>'danger'];
+                Session::flash('mensaje',$info);
+                DB::rollback();
+            }
+        }
+        else
+        {
+            $info = ['titulo'=>'PROCESO INCOMPLETO','msg'=>'No fue posible registrar el Movimiento de Artículos','class'=>'danger'];
+            Session::flash('mensaje',$info);
+            DB::rollback();
+        }
+
+        return true;
+    }
+
+    public function TransaccionTrasladoArticulo($data)
+    {
+        DB::beginTransaction();
+
+        $validaMov  = [];
+        $validaTras = [];
+        $validaInv  = [];
+
+        foreach ($data as $d => $dt)
+        {
+            $idMov = $this->SetMovimiento($dt);
+
+            $validaMov[$d]  = $idMov?1:0;
+            $data[$d]['movimiento'] = $idMov;
+        }
+
+        if(!in_array(0,$validaMov))
+        {
+            foreach ($data as $d => $dt)
+            {
+                $TrasladoArticulo = new TB_MOVIMIENTO_LOCAL();
+
+                $insertTras = $TrasladoArticulo->InsertMovimientoLocal($dt);
+
+                $validaTras[$d] = $insertTras?1:0;
+            }
+
+            if(!in_array(0,$validaTras))
+            {
+                foreach ($data as $d => $dt)
+                {
+                    $Inventario = new TB_INVENTARIO();
+
+                    $insertInv = $Inventario->TransaccionTraslado($dt);
 
                     $validaInv[$d] = $insertInv?1:0;
                 }

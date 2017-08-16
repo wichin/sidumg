@@ -45,26 +45,38 @@ $(document).on('click','#btnAgregar',function () {
     }
     else
     {
-        if(vlProveedor!='' && vlArticulo!='' && vlCantidad!='' && vlPrecio!='')
+        if(vlProveedor!=null && vlArticulo!='' && vlCantidad!='' && vlPrecio!='')
         {
-            var clase = vlProveedor+'|'+vlArticulo+'|'+vlCantidad+'|'+vlPrecio;
-            var fila = '<tr id="'+vlArticulo+'" class="'+clase+'">';
-            fila = fila + '<td style="text-align: center;"><a href="#" onclick="removeFila('+vlArticulo+')"><i class="material-icons">delete_forever</i></td></a>';
-            fila = fila + '<td>'+txArticulo+'</td>';
-            fila = fila + '<td>'+vlCantidad+'</td>';
-            fila = fila + '<td>'+vlPrecio+'</td>';
-            fila = fila + '<td>'+txProveedor+'</td>';
-            fila = fila + '</tr>';
+            if(vlCantidad>0)
+            {
+                var clase = vlProveedor+'|'+vlArticulo+'|'+vlCantidad+'|'+vlPrecio;
+                var fila = '<tr id="'+vlArticulo+'" class="'+clase+'">';
+                fila = fila + '<td style="text-align: center;"><a href="#" onclick="removeFila('+vlArticulo+')"><i class="material-icons">delete_forever</i></td></a>';
+                fila = fila + '<td>'+txArticulo+'</td>';
+                fila = fila + '<td>'+vlCantidad+'</td>';
+                fila = fila + '<td>'+vlPrecio+'</td>';
+                fila = fila + '<td>'+txProveedor+'</td>';
+                fila = fila + '</tr>';
 
-            $('#descripcion, #idArticulo, #cantidad, #precio').val('');
-            $('#proveedor').prop('disabled',true);
-            //$('select').prop('selectedIndex', 0);
-            $('select').material_select();
-            Materialize.updateTextFields();
+                $('#descripcion, #idArticulo, #cantidad, #precio').val('');
+                $('#proveedor').prop('disabled',true);
+                //$('select').prop('selectedIndex', 0);
+                $('select').material_select();
+                Materialize.updateTextFields();
 
-            $('#tblIngresos #'+vlArticulo).remove();
-            $('#tblIngresos').append(fila);
-            mostrarTabla();
+                $('#tblIngresos #'+vlArticulo).remove();
+                $('#tblIngresos').append(fila);
+                mostrarTabla();
+            }
+            else
+            {
+                $.alert({
+                    title: 'ADVERTENCIA',
+                    content: '¡Debe ingresar por lo menos un artículo!',
+                    type: 'red',
+                    theme: 'dark'
+                })
+            }
         }
         else
         {

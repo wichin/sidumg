@@ -2,6 +2,39 @@ $(document).ready(function () {
     $('select').material_select();
 });
 
+$('#cliente').autocomplete({
+    serviceUrl: 'buscarClienteNombre',
+    minChars: 2,
+    showNoSuggestionNotice: true,
+    noSuggestionNotice: 'El cliente no existente',
+    onSelect: function (resp) {
+        $('#idCliente').val(resp.data);
+        $('#documento').val(resp.doc);
+        Materialize.updateTextFields();
+    },
+    onInvalidateSelection: function () {
+        $('#idCliente').val('');
+        $('#documento').val('');
+    }
+});
+
+$('#documento').autocomplete({
+    serviceUrl: 'buscarClienteDoc',
+    minChars: 2,
+    showNoSuggestionNotice: true,
+    noSuggestionNotice: 'El cliente no existente',
+    onSelect: function (resp) {
+        $('#idCliente').val(resp.data);
+        $('#cliente').val(resp.nom);
+        Materialize.updateTextFields();
+    },
+    onInvalidateSelection: function () {
+        $('#idCliente').val('');
+        $('#cliente').val('');
+        Materialize.updateTextFields();
+    }
+});
+
 $('#descripcion').autocomplete({
     serviceUrl: 'buscaArticuloLocal',
     minChars: 4,
@@ -11,19 +44,19 @@ $('#descripcion').autocomplete({
         $('#idArticulo').val(resp.data);
         $('#disponible').val(resp.count);
         $('#cantidad').attr('max',resp.count);
+        $('#precio').val(resp.price);
         Materialize.updateTextFields();
     },
     onInvalidateSelection: function () {
-        $('#idArticulo').val('');
-        $('#disponible').val('');
+        $('#idArticulo, #disponible, #precio').val('');
         Materialize.updateTextFields();
     }
 });
 
 $(document).on('click','#btnAgregar',function () {
-    var vlDestino = $('#destino').val();
     var vlArticulo  = $('#idArticulo').val();
     var vlCantidad  = $('#cantidad').val();
+    var vlPrecio    = $('#precio').val();
 
     var txProveedor = $('#destino').find('option:selected').text();
     var txArticulo  = $('#descripcion').val();
@@ -49,26 +82,27 @@ $(document).on('click','#btnAgregar',function () {
     }
     else
     {
-        if(vlDestino!=null && vlArticulo!='' && vlCantidad!='')
+        if(vlArticulo!='' && vlCantidad!='')
         {
             var vlMaxArticulo = $('#cantidad').attr('max');
 
+            vlPrecio        = parseFloat(vlPrecio);
             vlCantidad      = parseInt(vlCantidad);
             vlMaxArticulo   = parseInt(vlMaxArticulo);
 
             if(vlCantidad > 0 && vlCantidad <= vlMaxArticulo)
             {
-                var clase = vlDestino+'|'+vlArticulo+'|'+vlCantidad;
+                var subtotal = vlPrecio * vlCantidad;
+                var clase = vlArticulo+'|'+vlCantidad;
                 var fila = '<tr id="'+vlArticulo+'" class="'+clase+'">';
                 fila = fila + '<td style="text-align: center;"><a href="#" onclick="removeFila('+vlArticulo+')"><i class="material-icons">delete_forever</i></td></a>';
                 fila = fila + '<td>'+txArticulo+'</td>';
                 fila = fila + '<td>'+vlCantidad+'</td>';
+                fila = fila + '<td>'+vlPrecio+'</td>';
+                fila = fila + '<td>'+subtotal+'</td>';
                 fila = fila + '</tr>';
 
                 $('#descripcion, #idArticulo, #disponible, #cantidad, #precio').val('');
-                $('#destino').prop('disabled',true);
-                //$('select').prop('selectedIndex', 0);
-                $('select').material_select();
                 Materialize.updateTextFields();
 
                 $('#tblIngresos #'+vlArticulo).remove();
@@ -114,27 +148,54 @@ function mostrarTabla() {
 $(document).on('click','#btnGuardar',function () {
     var ingreso = '';
     var i = 0;
-    $("#tblIngresos tbody tr").each(function () {
-        var classfila = $(this).attr('class');
-        if(i!==0)
-            ingreso = ingreso+'+';
 
-        ingreso = ingreso+classfila;
-        i++;
-    });
+    var vlCliente = $('#idCliente').val();
 
-    if(ingreso!='')
+    if(vlCliente!='')
     {
-        $('#ingreso').val(ingreso);
-        $('#frmTraslado').submit();
+        $("#tblIngresos tbody tr").each(function () {
+            var classfila = $(this).attr('class');
+            if(i!==0)
+                ingreso = ingreso+'+';
+
+            ingreso = ingreso+classfila;
+            i++;
+        });
+
+        if(ingreso!='')
+        {
+            $('#ingreso').val(ingreso);
+            $('#vlCliente').val(vlCliente);
+            console.log('facturando '+ingreso);
+            $('#frmFactura').submit();
+        }
+        else
+        {
+            $.alert({
+                title: 'ADVERTENCIA',
+                content: '¡Los valores ingresados no son correctos para registrar el traslado de artículos!',
+                type: 'red',
+                theme: 'dark'
+            })
+        }
     }
     else
     {
-        $.alert({
-            title: 'ADVERTENCIA',
-            content: '¡Los valores ingresados no son correctos para registrar el traslado de artículos!',
+        $.confirm({
+            title: 'NO EXISTE CLIENTE',
+            content: 'El cliente ingresado no se encuentra registrado en el sistema, ¿Desea crearlo?',
             type: 'red',
-            theme: 'dark'
-        })
+            theme: 'dark',
+            buttons: {
+                no: function () {},
+                si: {
+                    btnClass: 'btn-red',
+                    action: function(){
+                        $('#cliente, #documento').val('');
+                        window.open('crearCliente');
+                    }
+                }
+            }
+        });
     }
 });

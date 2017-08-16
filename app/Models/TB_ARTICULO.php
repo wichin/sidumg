@@ -20,6 +20,11 @@ class TB_ARTICULO extends Model
         return $this->hasMany('App\Models\TB_INGRESO_PROVEEDOR','id_articulo','id');
     }
 
+    public function MovimientoLocal()
+    {
+        return $this->hasMany('App\Models\TB_MOVIMIENTO_LOCAL','id_articulo','id');
+    }
+
     public function Inventario()
     {
         return $this->hasMany('App\Models\TB_INVENTARIO','id_articulo','id');
@@ -79,19 +84,12 @@ class TB_ARTICULO extends Model
 
     public function GetAutoCompleteArticuloBodega($data, $local)
     {
-        /*
-        return $this->where('descripcion','like','%'.$data.'%')
-            ->join('')
-            ->orderBy('descripcion')
-            ->get();
-        */
-
         return DB::table('tb_articulo')
             ->join('tb_inventario','tb_inventario.id_articulo','=','tb_articulo.id')
             ->where('tb_articulo.descripcion','like','%'.$data.'%')
             ->where('tb_inventario.id_local',$local)
             ->where('tb_inventario.cantidad','>',0)
-            ->select('tb_articulo.id','tb_articulo.descripcion','tb_inventario.cantidad')
+            ->select('tb_articulo.id','tb_articulo.descripcion','tb_inventario.cantidad','tb_articulo.precio_venta')
             ->get();
     }
 }

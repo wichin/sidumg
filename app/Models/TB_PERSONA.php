@@ -13,6 +13,11 @@ class TB_PERSONA extends Model
     {
         return $this->hasMany('App\Models\TB_USUARIO','id_persona','id');
     }
+    
+    public function Cliente()
+    {
+        return $this->hasMany('App\Models\TB_CLIENTE','id_persona','id');
+    }
 
     public function TipoDocumento()
     {
@@ -27,5 +32,17 @@ class TB_PERSONA extends Model
     public function Nacionalidad()
     {
         return $this->belongsTo('App\Models\CAT_NACIONALIDAD','id_nacionalidad','id');
+    }
+
+    ## Transacciones
+
+    public function ValidaDocumento($documento)
+    {
+        return $this->where('documento',$documento)->get();
+    }
+
+    public function SetPersona($data)
+    {
+        return $this->insertGetId($data);
     }
 }

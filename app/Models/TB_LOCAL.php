@@ -24,6 +24,21 @@ class TB_LOCAL extends Model
         return $this->hasMany('App\Models\TB_INVENTARIO','id_local','id');
     }
 
+    public function MovimientoLocalOrigen()
+    {
+        return $this->hasMany('App\Models\TB_MOVIMIENTO_LOCAL','id_local_origen','id');
+    }
+
+    public function MovimientoLocalDestino()
+    {
+        return $this->hasMany('App\Models\TB_MOVIMIENTO_LOCAL','id_local_destino','id');
+    }
+    
+    public function AutorizacionFactura()
+    {
+        return $this->hasMany('App\Models\TB_AUTORIZACION_FACTURA','id_local','id');
+    }
+
     public function Empresa()
     {
         return $this->belongsTo('App\Models\TB_EMPRESA','id_empresa','id');

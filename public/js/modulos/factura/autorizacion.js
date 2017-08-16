@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     $('.datepicker').pickadate({
         selectMonths: false, // Creates a dropdown to control month
-        selectYears: 100, // Creates a dropdown of 15 years to control year,
+        selectYears: 10, // Creates a dropdown of 15 years to control year,
         today: 'Hoy',
         clear: 'Limpiar',
         close: 'Aceptar',
@@ -24,11 +24,4 @@ $(document).ready(function () {
 
         weekdaysLetter: [ 'D', 'L', 'M', 'X', 'J', 'V', 'S' ]
     });
-});
-
-$(document).on('click','#btnClean',function () {
-    $('input').val('');
-    $('select').prop('selectedIndex', 0);
-    $('select').material_select();
-    Materialize.updateTextFields();
 });

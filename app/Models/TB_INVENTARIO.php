@@ -22,27 +22,35 @@ class TB_INVENTARIO extends Model
 
     ## Transacciones
 
-    public function ValidaInventario($data)
+    public function ValidaInventario($data, $local)
     {
-        return $this->where('id_local',$data['id_local'])
+        return $this->where('id_local',$local)
             ->where('id_articulo',$data['id_articulo'])
             ->get();
     }
 
-    public function UpdateInventario($data)
+    public function ValidaExistencias($data, $local)
     {
-        return $this->where('id_local',$data['id_local'])
+        return $this->where('id_local',$local)
+            ->where('id_articulo',$data['id_articulo'])
+            ->where('cantidad','>=',$data['cantidad'])
+            ->get();
+    }
+
+    public function UpdateInventario($data, $local, $operacion)
+    {
+        return $this->where('id_local',$local)
             ->where('id_articulo',$data['id_articulo'])
             ->update([
-                'cantidad'              => DB::raw( 'cantidad '.$data['operacion'].' '.$data['cantidad']),
+                'cantidad'              => DB::raw( 'cantidad '.$operacion.' '.$data['cantidad']),
                 'ultima_modificacion'   => $data['fecha']
             ]);
     }
 
-    public function InsertInventario($data)
+    public function InsertInventario($data,$local)
     {
         return $this->insert([
-            'id_local'              => $data['id_local'],
+            'id_local'              => $local,
             'id_articulo'           => $data['id_articulo'],
             'cantidad'              => $data['cantidad'],
             'ultima_modificacion'   => $data['fecha']
@@ -51,15 +59,41 @@ class TB_INVENTARIO extends Model
     
     public function TransaccionProveedor($data)
     {
-        $validacion = $this->ValidaInventario($data);
+        $validacion = $this->ValidaInventario($data, $data['id_local']);
         
         if(isset($validacion)&&count($validacion)>0)
         {
-            return $this->UpdateInventario($data);
+            return $this->UpdateInventario($data,$data['id_local'],'+');
         }
         else
         {
-            return $this->InsertInventario($data);
+            return $this->InsertInventario($data, $data['id_local']);
         }
+    }
+
+    public function TransaccionTraslado($data)
+    {
+        $validaExistencia = $this->ValidaExistencias($data, $data['id_local_origen']);
+
+        if(isset($validaExistencia)&&count($validaExistencia)>0)
+        {
+            if($this->UpdateInventario($data,$data['id_local_origen'],'-'))
+            {
+                $validacion = $this->ValidaInventario($data, $data['id_local_destino']);
+
+                if(isset($validacion)&&count($validacion)>0)
+                {
+                    return $this->UpdateInventario($data,$data['id_local_destino'],'+');
+                }
+                else
+                {
+                    return $this->InsertInventario($data, $data['id_local_destino']);
+                }
+            }
+            else
+                return false;
+        }
+        else
+            return false;
     }
 }

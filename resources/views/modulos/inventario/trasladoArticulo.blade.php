@@ -30,11 +30,15 @@
 
     <div class="row">
         <div class="col s12 m3 l3 offset-m1 offset-l1 input-field">
+            <input type="number" id="disponible" name="disponible" readonly style="background: white;">
+            <label>Disponible</label>
+        </div>
+        <div class="col s12 m3 l3 input-field">
             <input type="number" id="cantidad" name="cantidad" min="1">
             <label>Cantidad</label>
         </div>
 
-        <div class="col s12 m7 l7">
+        <div class="col s12 m4 l4">
             <br>
             <button class="waves-effect waves-light btn secondary-content" type="button" id="btnAgregar">
                 AGREGAR <i class="material-icons right">control_point</i>
@@ -64,7 +68,7 @@
         </div>
     </div>
 
-    <form action="{{url('inventario/ingresoProveedor')}}" method="post" id="frmIngreso" style="display: none;">
+    <form action="{{url('inventario/trasladoArticulo')}}" method="post" id="frmTraslado" style="display: none;">
         <input type="hidden" id="ingreso" name="ingreso" value="">
         <input type="hidden" id="token" name="_token" value="{!! csrf_token() !!}">
     </form>

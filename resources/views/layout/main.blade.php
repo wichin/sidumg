@@ -68,7 +68,7 @@
                     <div class="collapsible-body" style="padding: 0;">
                         <ul>
                             @foreach($item as $menu)
-                            <li><a href="{{url($menu->url)}}">{{$menu->nomMenu}}</a></li>
+                            <li class=""><a href="{{url($menu->url)}}" class="linkMenu">{{$menu->nomMenu}}</a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -117,11 +117,15 @@ $(document).ready(function () {
     $(".button-collapse").sideNav();
 
     @if(Session::has('mensaje'))
-        new PNotify({
+        var notice = new PNotify({
             title: '{{Session::get('mensaje')['titulo']}}',
             text: '{{Session::get('mensaje')['msg']}}',
             type: '{{Session::get('mensaje')['class']}}',
             icon: false
+        });
+
+        notice.get().click(function() {
+            notice.remove();
         });
     @endif
 });
@@ -129,5 +133,6 @@ $(document).ready(function () {
 
 
 @section('js')
+
 @show
 

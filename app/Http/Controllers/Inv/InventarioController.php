@@ -174,7 +174,7 @@ class InventarioController extends Controller
             }
 
             $MovimientoInventario   = new TB_MOVIMIENTO_INVENTARIO();
-            $resultTransaction      = $MovimientoInventario->InsertIngresoProveedor($dataArticulos);
+            $resultTransaction      = $MovimientoInventario->TransaccionIngresoProveedor($dataArticulos);
 
             return redirect(url('inventario/ingresoProveedor'));
         }
@@ -221,13 +221,37 @@ class InventarioController extends Controller
 
         if($request->isMethod('post'))
         {
+            $ingreso = $request->ingreso;
+            $dataIngreso = explode('+',$ingreso);
+            $dataArticulos  = [];
+            $hoy            = Carbon::now()->format('Y/m/d H:i:s');
+            $idUsuario      = $this->Menu['id'];
+            $idLocal        = $this->Menu['local']->id;
+
+            foreach ($dataIngreso as $di)
+            {
+                $item   = explode('|',$di);
+                $dataArticulos[] = array(
+                    'id_local_destino'  => $item[0],
+                    'id_articulo'       => $item[1],
+                    'cantidad'          => $item[2],
+                    'fecha'             => $hoy,
+                    'id_usuario'        => $idUsuario,
+                    'id_local_origen'   => $idLocal,
+                    'id_transaccion'    => 2,   // Traslado
+                );
+            }
+
+            $MovimientoInventario   = new TB_MOVIMIENTO_INVENTARIO();
+            $resultTransaction      = $MovimientoInventario->TransaccionTrasladoArticulo($dataArticulos);
+
             return redirect(url('inventario/trasladoArticulo'));
         }
 
         return view('modulos.inventario.trasladoArticulo',get_defined_vars());
     }
 
-    public function InitBuscaArticuloBodega(Request $request)
+    public function InitBuscaArticuloLocal(Request $request)
     {
         $sugerencias = [];
 
@@ -236,7 +260,7 @@ class InventarioController extends Controller
         $idLocal    = $this->Menu['local']->id;
 
         $Articulo = new TB_ARTICULO();
-        $dataArticulo = $Articulo->GetAutocompleteArticuloBodega($query, $idLocal);
+        $dataArticulo = $Articulo->GetAutoCompleteArticuloBodega($query, $idLocal);
 
         if(isset($dataArticulo)&&count($dataArticulo)>0)
         {

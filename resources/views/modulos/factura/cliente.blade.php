@@ -2,7 +2,7 @@
 @section('contenido')
     <h4 class="blue-text text-darken-4">{{$titulo}}</h4>
     <hr><br>
-    <form action="{{url('admin/crearUsuario')}}" method="POST">
+    <form action="{{url('factura/crearCliente')}}" method="POST">
         <div class="row">
             <div class="col s12 m4 l4 input-field">
                 <input type="text" id="nombres" name="nombres" class="validate" required="" aria-required="true">
@@ -17,48 +17,26 @@
                 <label for="nacimiento">Fecha Nacimiento</label>
             </div>
         </div>
-        <div class="row">
-            <div class="col s12 m4 l4 input-field">
-                <input type="email" id="correo" name="correo" class="validate" required="" aria-required="true">
-                <label for="correo">Correo electrónico</label>
-            </div>
-            <div class="col s12 m4 l4 input-field">
-                <select id="rol" name="rol" class="validate" required="" aria-required="true">
-                    <option value="" disabled selected>Seleccione...</option>
-                    @if(isset($selectRol)&&count($selectRol)>0)
-                        @foreach($selectRol as $s)
-                        <option value="{{$s->id}}">{{$s->nombre}}</option>
-                        @endforeach
-                    @endif
-                </select>
-                <label>Rol</label>
-            </div>
-            <div class="col s12 m4 l4 input-field">
-                <select id="tipoUsuario" name="tipoUsuario" class="validate" required="" aria-required="true">
-                    <option value="" disabled selected>Seleccione...</option>
-                    @if(isset($selectTipoUsuario)&&count($selectTipoUsuario)>0)
-                        @foreach($selectTipoUsuario as $s)
-                            <option value="{{$s->id}}">{{$s->nombre}}</option>
-                        @endforeach
-                    @endif
-                </select>
-                <label for="tipoUsuario">Tipo de Usuario</label>
-            </div>
-        </div>
 
         <div class="row">
-            <div class="col s12 m4 l4 input-field">
-                <select id="local" name="local" class="validate" required="" aria-required="true">
+            <div class="col s12 m3 l3 input-field">
+                <select id="tipoCliente" name="tipoCliente" class="validate" required="" aria-required="true">
                     <option value="" disabled selected>Seleccione...</option>
-                    @if(isset($selectLocal)&&count($selectLocal)>0)
-                        @foreach($selectLocal as $s)
+                    @if(isset($selectTipoCliente)&&count($selectTipoCliente)>0)
+                        @foreach($selectTipoCliente as $s)
                             <option value="{{$s->id}}">{{$s->nombre}}</option>
                         @endforeach
                     @endif
                 </select>
-                <label for="local">Local</label>
+                <label for="tipoCliente">Tipo Cliente</label>
             </div>
-            <div class="col s8 m8 l8 input-field">
+
+            <div class="col s12 m3 l3 input-field">
+                <input type="email" id="correo" name="correo" class="validate" required="" aria-required="true">
+                <label for="correo">Correo Electrónico</label>
+            </div>
+
+            <div class="col s12 m6 l6 input-field">
                 <input type="text" id="direccion" name="direccion">
                 <label for="direccion">Direcci&oacute;n</label>
             </div>
@@ -134,5 +112,5 @@
 @stop
 
 @section('js')
-    {!! Html::script('js/modulos/admin/crearUsuario.js') !!}
+    {!! Html::script('js/modulos/factura/cliente.js') !!}
 @stop
