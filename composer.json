@@ -8,7 +8,9 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "laravelcollective/html": "^5.2.0",
-        "skydiver/laravel-materialize-css": "dev-master"
+        "skydiver/laravel-materialize-css": "dev-master",
+        "barryvdh/laravel-dompdf": "^0.8.0",
+        "milon/barcode": "^5.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

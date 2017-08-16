@@ -31,22 +31,23 @@
                 <label class="active">Artículo</label>
             </div>
             <div class="col s6 m2 l2 input-field">
+                <input type="number" id="cantidad" name="cantidad" min="1">
+                <label>Cantidad</label>
+            </div>
+            <div class="col s6 m2 l2 input-field">
                 <input type="number" id="disponible" name="disponible" readonly style="background: white;">
                 <label>Disponible</label>
             </div>
+
             <div class="col s6 m2 l2 input-field">
                 <input type="number" id="precio" name="precio" readonly style="background: white;">
                 <label>Precio</label>
-            </div>
-            <div class="col s6 m2 l2 input-field">
-                <input type="number" id="cantidad" name="cantidad" min="1">
-                <label>Cantidad</label>
             </div>
 
             <div class="col s12 m2 l2">
                 <br>
                 <button class="waves-effect waves-light btn secondary-content" type="button" id="btnAgregar">
-                    AGREGAR <i class="material-icons right">control_point</i>
+                    AGREGAR<i class="material-icons right">control_point</i>
                 </button>
             </div>
         </div>
@@ -72,6 +73,9 @@
             </table>
         </div>
         <div class="row">
+            <div class="col s12 m6 l6">
+                <h5 id="totalFactura"></h5>
+            </div>
             <button class="waves-effect waves-light btn blue darken-4 secondary-content" type="button" id="btnGuardar">
                 CONFIRMAR <i class="material-icons right">check</i>
             </button>

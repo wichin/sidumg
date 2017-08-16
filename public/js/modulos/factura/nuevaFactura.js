@@ -1,3 +1,5 @@
+var total = 0;
+
 $(document).ready(function () {
     $('select').material_select();
 });
@@ -93,19 +95,30 @@ $(document).on('click','#btnAgregar',function () {
             if(vlCantidad > 0 && vlCantidad <= vlMaxArticulo)
             {
                 var subtotal = vlPrecio * vlCantidad;
+                total = total + subtotal;
                 var clase = vlArticulo+'|'+vlCantidad;
                 var fila = '<tr id="'+vlArticulo+'" class="'+clase+'">';
                 fila = fila + '<td style="text-align: center;"><a href="#" onclick="removeFila('+vlArticulo+')"><i class="material-icons">delete_forever</i></td></a>';
                 fila = fila + '<td>'+txArticulo+'</td>';
                 fila = fila + '<td>'+vlCantidad+'</td>';
                 fila = fila + '<td>'+vlPrecio+'</td>';
-                fila = fila + '<td>'+subtotal+'</td>';
+                fila = fila + '<td id="sub_'+vlArticulo+'">'+subtotal+'</td>';
                 fila = fila + '</tr>';
 
                 $('#descripcion, #idArticulo, #disponible, #cantidad, #precio').val('');
                 Materialize.updateTextFields();
 
+                var sub = $('#sub_'+vlArticulo).html();
+
+                if(sub === undefined)
+                    sub = 0;
+                else
+                    sub = parseFloat(sub);
+
+                total = total - sub;
+
                 $('#tblIngresos #'+vlArticulo).remove();
+                $('#totalFactura').html('Total: Q. '+total);
                 $('#tblIngresos').append(fila);
                 mostrarTabla();
             }
@@ -132,6 +145,11 @@ $(document).on('click','#btnAgregar',function () {
 });
 
 function removeFila(id) {
+    var sub = $('#sub_'+id).html();
+    sub = parseFloat(sub);
+    total = total - sub;
+    $('#totalFactura').html('Total: Q.'+total);
+
     $('#tblIngresos #'+id).remove();
     mostrarTabla();
 }
@@ -142,7 +160,11 @@ function mostrarTabla() {
     if(filas >1)
         $("#divLista").show(500);
     else
+    {
+        total = 0;
         $("#divLista").hide(500);
+    }
+
 }
 
 $(document).on('click','#btnGuardar',function () {
