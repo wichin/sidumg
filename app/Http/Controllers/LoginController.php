@@ -57,6 +57,7 @@ class LoginController extends Controller
     public function Init()
     {
         $usuario = Session::get('usuario');
+        $isLarge = true;
 
         $tituloPagina = 'Inicio';
         return view('layout.inicio',get_defined_vars());
