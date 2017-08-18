@@ -175,27 +175,42 @@ $(document).on('click','#btnGuardar',function () {
 
     if(vlCliente!='')
     {
-        $("#tblIngresos tbody tr").each(function () {
-            var classfila = $(this).attr('class');
-            if(i!==0)
-                ingreso = ingreso+'+';
+        var vlCobro = $('#tipoCobro').val();
 
-            ingreso = ingreso+classfila;
-            i++;
-        });
-
-        if(ingreso!='')
+        if(vlCobro!=null)
         {
-            $('#ingreso').val(ingreso);
-            $('#vlCliente').val(vlCliente);
-            console.log('facturando '+ingreso);
-            $('#frmFactura').submit();
+            $("#tblIngresos tbody tr").each(function () {
+                var classfila = $(this).attr('class');
+                if(i!==0)
+                    ingreso = ingreso+'+';
+
+                ingreso = ingreso+classfila;
+                i++;
+            });
+
+            if(ingreso!='')
+            {
+                $('#ingreso').val(ingreso);
+                $('#vlCliente').val(vlCliente);
+                $('#vlCobro').val(vlCobro);
+                console.log('facturando '+ingreso);
+                $('#frmFactura').submit();
+            }
+            else
+            {
+                $.alert({
+                    title: 'ADVERTENCIA',
+                    content: '¡Los valores ingresados no son correctos para registrar el traslado de artículos!',
+                    type: 'red',
+                    theme: 'dark'
+                })
+            }
         }
         else
         {
             $.alert({
                 title: 'ADVERTENCIA',
-                content: '¡Los valores ingresados no son correctos para registrar el traslado de artículos!',
+                content: '¡Debe seleccionar un tipo de cobro para la factura!',
                 type: 'red',
                 theme: 'dark'
             })

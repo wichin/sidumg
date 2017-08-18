@@ -11,15 +11,26 @@
 
     <div id="divCliente">
         <div class="row">
-            <div class="col s12 m6 l6 offset-m1 offset-l1 input-field">
+            <div class="col s12 m6 l6 input-field">
                 <input type="text" id="cliente" name="cliente">
                 <label class="active">Cliente</label>
             </div>
-            <div class="col s12 m4 l4 input-field">
+            <div class="col s12 m3 l3 input-field">
                 <input type="text" id="documento" name="documento">
                 <label class="active">Documento</label>
             </div>
             <input type="hidden" id="idCliente" name="idCliente">
+            <div class="col s12 m3 l3 input-field">
+                <select id="tipoCobro" name="tipoCobro">
+                    <option value="" disabled selected></option>
+                    @if(isset($selectTipoC)&&count($selectTipoC)>0)
+                        @foreach($selectTipoC as $s)
+                            <option value="{{$s->id}}">{{$s->nombre}}</option>
+                        @endforeach
+                    @endif
+                </select>
+                <label for="tipoCobro">Tipo de Cobro</label>
+            </div>
         </div>
     </div>
     <br>
@@ -85,6 +96,7 @@
     <form action="{{url('factura/crearFactura')}}" method="post" id="frmFactura" style="display: none;">
         <input type="hidden" id="ingreso" name="ingreso" value="">
         <input type="hidden" id="vlCliente" name="vlCliente">
+        <input type="hidden" id="vlCobro" name="vlCobro">
         <input type="hidden" id="token" name="_token" value="{!! csrf_token() !!}">
     </form>
 @stop

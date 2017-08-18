@@ -9,6 +9,11 @@ class TB_AUTORIZACION_FACTURA extends Model
     protected $table = 'TB_AUTORIZACION_FACTURA';
     public $timestamps = false;
     
+    public function Factura()
+    {
+        return $this->hasMany('App\Models\TB_FACTURA','id_autorizacion','id');    
+    }
+    
     public function Local()
     {
         return $this->belongsTo('App\Models\TB_LOCAL','id_local','id');

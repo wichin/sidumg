@@ -20,6 +20,11 @@ class TB_MOVIMIENTO_INVENTARIO extends Model
     {
         return $this->hasMany('App\Models\TB_MOVIMIENTO_LOCAL','id_movimiento','id');
     }
+    
+    public function FacturaDetalle()
+    {
+        return $this->hasMany('App\Models\TB_FACTURA_DETALLE','id_movimiento','id');
+    }
 
     public function TipoTransaccion()
     {

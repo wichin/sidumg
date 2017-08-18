@@ -26,7 +26,7 @@ class TB_MOVIMIENTO_LOCAL extends Model
 
     public function MovimientoInventario()
     {
-        return $this->belongsTo('App\Models\TB_MOVIMIENTO_LOCAL','id_movimiento','id');
+        return $this->belongsTo('App\Models\TB_MOVIMIENTO_INVENTARIO','id_movimiento','id');
     }
 
     ## Transacciones

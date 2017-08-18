@@ -29,6 +29,11 @@ class TB_ARTICULO extends Model
     {
         return $this->hasMany('App\Models\TB_INVENTARIO','id_articulo','id');
     }
+    
+    public function FacturaDetalle()
+    {
+        return $this->hasMany('App\Models\TB_FACTURA_DETALLE','id_articulo','id');
+    }
 
     public function Categoria()
     {

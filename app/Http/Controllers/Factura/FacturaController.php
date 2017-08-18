@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Factura;
 use App\Models\CAT_GENERO;
 use App\Models\CAT_NACIONALIDAD;
 use App\Models\CAT_TIPO_CLIENTE;
+use App\Models\CAT_TIPO_COBRO;
 use App\Models\CAT_TIPO_DOCUMENTO;
 use App\Models\TB_ARTICULO;
 use App\Models\TB_AUTORIZACION_FACTURA;
@@ -140,6 +141,9 @@ class FacturaController extends Controller
             $usuario        = $this->Menu;
             $titulo         = 'Nueva Factura';
             $isLarge        = true;
+
+            $TipoCobro      = new CAT_TIPO_COBRO();
+            $selectTipoC    = $TipoCobro->GetTipoCobro(1);
             
             if($request->isMethod('post'))
             {

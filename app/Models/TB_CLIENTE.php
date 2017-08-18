@@ -11,6 +11,16 @@ class TB_CLIENTE extends Model
     protected $table = 'TB_CLIENTE';
     public $timestamps = false;
     
+    public function Factura()
+    {
+        return $this->hasMany('App\Models\TB_FACTURA','id_cliente','id');
+    }
+
+    public function Cuenta()
+    {
+        return $this->hasMany('App\Models\TB_CUENTA','id_cliente','id');
+    }
+    
     public function Persona()
     {
         return $this->belongsTo('App\Models\TB_PERSONA','id_persona','id');
