@@ -34,6 +34,7 @@ class TB_INVENTARIO extends Model
         return $this->where('id_local',$local)
             ->where('id_articulo',$data['id_articulo'])
             ->where('cantidad','>=',$data['cantidad'])
+            ->with('Articulo')
             ->get();
     }
 
@@ -95,5 +96,29 @@ class TB_INVENTARIO extends Model
         }
         else
             return false;
+    }
+
+    public function TransaccionFactura($data)
+    {
+        $validaExistencia = $this->ValidaExistencias($data, $data['id_local']);        
+
+        if(isset($validaExistencia)&&count($validaExistencia)>0)
+        {
+            $descripcion = $validaExistencia[0]->Articulo->descripcion;
+            $precio_venta = $validaExistencia[0]->Articulo->precio_venta;
+
+            if($this->UpdateInventario($data,$data['id_local'],'-'))
+            {
+                return ['ESTADO'=>'OK','DESCRIPCION'=>$descripcion,'PRECIO_VENTA'=>$precio_venta];
+            }
+            else
+            {
+                return ['ESTADO'=>'ERROR'];
+            }
+        }
+        else
+        {
+            return ['ESTADO'=>'ERROR'];
+        }
     }
 }

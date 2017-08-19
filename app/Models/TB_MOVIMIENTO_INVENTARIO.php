@@ -44,11 +44,11 @@ class TB_MOVIMIENTO_INVENTARIO extends Model
     public function SetMovimiento($data)
     {
         return $this->insertGetId([
-            'id_transaccion'    => $data['id_transaccion'],
-            'id_articulo'       => $data['id_articulo'],
-            'cantidad'          => $data['cantidad'],
-            'fecha'             => $data['fecha'],
-            'id_usuario'        => $data['id_usuario']
+            'id_tipo_transaccion'   => $data['id_transaccion'],
+            'id_articulo'           => $data['id_articulo'],
+            'cantidad'              => $data['cantidad'],
+            'fecha'                 => $data['fecha'],
+            'id_usuario'            => $data['id_usuario']
         ]);
     }
 
@@ -186,5 +186,85 @@ class TB_MOVIMIENTO_INVENTARIO extends Model
         }
 
         return true;
+    }
+    
+    public function TransaccionFactura($dataFactura, $dataArticulo)
+    {
+        DB::beginTransaction();
+
+        $validaMov  = [];
+        $validaInv  = [];
+        $validaDet  = [];
+
+        foreach ($dataArticulo as $d => $dt)
+        {
+            $idMov = $this->SetMovimiento($dt);
+
+            $validaMov[$d]  = $idMov?1:0;
+            $dataArticulo[$d]['movimiento'] = $idMov;
+        }
+        
+        if(!in_array(0,$validaMov))
+        {
+            foreach ($dataArticulo as $d => $dt)
+            {
+                $Inventario = new TB_INVENTARIO();
+
+                $insertInv = $Inventario->TransaccionFactura($dt);
+
+                if(isset($insertInv['ESTADO'])&&$insertInv['ESTADO']=='OK')
+                {
+                    $dataArticulo[$d]['descripcion'] = $insertInv['DESCRIPCION'];
+                    $dataArticulo[$d]['precio_compra'] = $insertInv['PRECIO_VENTA'];
+                    $validaInv[$d] = 1;
+                }
+                else
+                {
+                    $validaInv[$d] = 0;
+                }
+            }
+
+            if(!in_array(0,$validaInv))
+            {
+                $Autorizacion = new TB_AUTORIZACION_FACTURA();
+                
+                $resAutorizacion = $Autorizacion->GetCorrelativo($dataFactura['id_local']);
+                if(isset($resAutorizacion['ESTADO'])&&$resAutorizacion['ESTADO']=='OK')
+                {
+                    $dataAutorizacion = $resAutorizacion['DATA'];
+                }
+                else
+                {
+                    if(isset($resAutorizacion['MENSAJE']))
+                    {
+                        $info = ['titulo'=>'PROCESO INCOMPLETO','msg'=>$resAutorizacion['MENSAJE'],'class'=>'error'];
+                        Session::flash('mensaje',$info);
+                        DB::rollback();
+                    }
+                    else
+                    {
+                        $info = ['titulo'=>'PROCESO INCOMPLETO','msg'=>'No fue posible obtener correlativo para la generación de Factura','class'=>'error'];
+                        Session::flash('mensaje',$info);
+                        DB::rollback();
+                    }
+                }
+            }
+            else
+            {
+                $info = ['titulo'=>'PROCESO INCOMPLETO','msg'=>'No fue posible registrar la Actualización de Inventario','class'=>'error'];
+                Session::flash('mensaje',$info);
+                DB::rollback();
+            }
+        }
+        else
+        {
+            $info = ['titulo'=>'PROCESO INCOMPLETO','msg'=>'No fue posible registrar el Movimiento de Artículos','class'=>'error'];
+            Session::flash('mensaje',$info);
+            DB::rollback();
+        }
+
+        DB::rollback();
+        dd($dataArticulo, $resAutorizacion);
+        
     }
 }

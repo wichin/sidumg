@@ -12,6 +12,7 @@ use App\Models\TB_AUTORIZACION_FACTURA;
 use App\Models\TB_CLIENTE;
 use App\Models\TB_CUENTA;
 use App\Models\TB_LOCAL;
+use App\Models\TB_MOVIMIENTO_INVENTARIO;
 use App\Models\TB_USUARIO;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -176,8 +177,8 @@ class FacturaController extends Controller
                         'id_cliente'    => $idCliente,
                         'id_tipo_cobro' => $tipoCobro,
                         'id_cuenta'     => $idCuenta,
-                        'id_usuario'    => $idUsuario
-
+                        'id_usuario'    => $idUsuario,
+                        'id_local'      => $idLocal
                     ];
 
                     foreach ($dataIngreso as $di)
@@ -192,6 +193,9 @@ class FacturaController extends Controller
                             'id_transaccion'    => 3,   // Nuevo Ingreso
                         );
                     }
+
+                    $Movimiento = new TB_MOVIMIENTO_INVENTARIO();
+                    $resultado = $Movimiento->TransaccionFactura($dataFactura, $dataArticulos);
                 }
                 else
                 {
