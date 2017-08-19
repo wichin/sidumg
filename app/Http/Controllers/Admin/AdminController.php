@@ -152,7 +152,7 @@ class AdminController extends Controller
             }
             else
             {
-                $info = ['titulo'=>'ERROR','msg'=>'No fue posible la creacion del producto.','class'=>'danger'];
+                $info = ['titulo'=>'ERROR','msg'=>'No fue posible la creacion del producto.','class'=>'error'];
                 Session::flash('mensaje',$info);
             }
 

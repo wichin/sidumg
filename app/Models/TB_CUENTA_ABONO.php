@@ -9,8 +9,8 @@ class TB_CUENTA_ABONO extends Model
     protected $table = 'TB_CUENTA_ABONO';
     public $timestamps = false;
 
-    public function CuentaAbono()
+    public function CuentaDetalle()
     {
-        return $this->belongsTo('App\Models\TB_CUENTA_ABONO','id_cuenta_detalle','id');
+        return $this->belongsTo('App\Models\TB_CUENTA_DETALLE','id_cuenta_detalle','id');
     }
 }

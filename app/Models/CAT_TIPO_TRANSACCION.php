@@ -11,7 +11,7 @@ class CAT_TIPO_TRANSACCION extends Model
     
     public function MovimientoInventario()
     {
-        return $this->hasMany('App\Models\TB_MOVIMIENTO_INVENTARIO','id_transaccion','id');
+        return $this->hasMany('App\Models\TB_MOVIMIENTO_INVENTARIO','id_tipo_transaccion','id');
     }
 
     public function GetTipoTransaccion($estado=null)

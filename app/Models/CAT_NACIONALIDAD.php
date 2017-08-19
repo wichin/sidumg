@@ -11,7 +11,7 @@ class CAT_NACIONALIDAD extends Model
 
     public function Persona()
     {
-        return $this->hasMany('App\Models\CAT_TIPO_DOCUMENTO','id_nacionalidad','id');
+        return $this->hasMany('App\Models\TB_PERSONA','id_nacionalidad','id');
     }
 
     public function GetNacionalidad($estado=null)

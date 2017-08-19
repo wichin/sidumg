@@ -28,7 +28,7 @@ class TB_MOVIMIENTO_INVENTARIO extends Model
 
     public function TipoTransaccion()
     {
-        return $this->belongsTo('App\Models\CAT_TIPO_TRANSACCION','id_transaccion','id');
+        return $this->belongsTo('App\Models\CAT_TIPO_TRANSACCION','id_tipo_transaccion','id');
     }
 
     public function Articulo()

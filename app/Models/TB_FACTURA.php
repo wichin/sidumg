@@ -13,6 +13,11 @@ class TB_FACTURA extends Model
     {
         return $this->hasMany('App\Models\TB_FACTURA_DETALLE','id_factura','id');
     }
+
+    public function CuentaDetalle()
+    {
+        return $this->hasMany('App\Models\TB_CUENTA_DETALLE','id_factura','id');
+    }
     
     public function Cliente()
     {

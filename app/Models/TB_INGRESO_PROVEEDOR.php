@@ -24,7 +24,7 @@ class TB_INGRESO_PROVEEDOR extends Model
         return $this->belongsTo('App\Models\TB_ARTICULO','id_articulo','id');
     }
 
-    public function Movimiento()
+    public function MovimientoInventario()
     {
         return $this->belongsTo('App\Models\TB_MOVIMIENTO_INVENTARIO','id_movimiento','id');
     }

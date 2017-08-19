@@ -15,6 +15,11 @@ class TB_EMPRESA extends Model
         return $this->hasMany('App\Models\TB_LOCAL','id_empresa','id');
     }
 
+    public function Metas()
+    {
+        return $this->hasMany('App\Models\TB_METAS','id_empresa','id');
+    }
+
     public function Pais()
     {
         return $this->belongsTo('App\Models\CAT_PAIS','id_pais','id');

@@ -10,6 +10,7 @@ use App\Models\CAT_TIPO_DOCUMENTO;
 use App\Models\TB_ARTICULO;
 use App\Models\TB_AUTORIZACION_FACTURA;
 use App\Models\TB_CLIENTE;
+use App\Models\TB_CUENTA;
 use App\Models\TB_LOCAL;
 use App\Models\TB_USUARIO;
 use Carbon\Carbon;
@@ -131,9 +132,11 @@ class FacturaController extends Controller
     
     public function InitCrearFactura(Request $request)
     {
-        $idLocal = $this->Menu['local']->id;
-        $Autorizacion = new TB_AUTORIZACION_FACTURA();
+        $idLocal            = $this->Menu['local']->id;
+        $idUsuario          = $this->Menu['id'];
+        $Autorizacion       = new TB_AUTORIZACION_FACTURA();
         $ValidaAutorizacion = $Autorizacion->ValidaAutorizacionActiva($idLocal);
+        $hoy                = Carbon::now()->format('Y/m/d H:i:s');
 
         if(isset($ValidaAutorizacion)&&count($ValidaAutorizacion)>0)
         {
@@ -147,7 +150,56 @@ class FacturaController extends Controller
             
             if($request->isMethod('post'))
             {
-                dd($request->all());
+                $validaCobro    = 0;                    // valida si se debe generar Cuenta para el cliente si es al credito
+                $idCuenta       = null;
+                $tipoCobro      = $request->vlCobro;
+                $idCliente     = $request->vlCliente;
+                $ingreso        = $request->ingreso;
+                $dataIngreso    = explode('+',$ingreso);
+                $dataArticulos  = [];
+
+
+                if($tipoCobro==1)
+                {
+                    $Cuenta     = new TB_CUENTA();
+                    $idCuenta   = $Cuenta->TransaccionCreacionCuenta($idCliente, $idUsuario);
+                    $validaCobro = isset($idCuenta)?1:0;
+                }
+                else 
+                {
+                    $validaCobro = 1;
+                }
+
+                if($validaCobro==1)
+                {
+                    $dataFactura = [
+                        'id_cliente'    => $idCliente,
+                        'id_tipo_cobro' => $tipoCobro,
+                        'id_cuenta'     => $idCuenta,
+                        'id_usuario'    => $idUsuario
+
+                    ];
+
+                    foreach ($dataIngreso as $di)
+                    {
+                        $item   = explode('|',$di);
+                        $dataArticulos[] = array(
+                            'id_articulo'       => $item[0],
+                            'cantidad'          => $item[1],
+                            'fecha'             => $hoy,
+                            'id_usuario'        => $idUsuario,
+                            'id_local'          => $idLocal,
+                            'id_transaccion'    => 3,   // Nuevo Ingreso
+                        );
+                    }
+                }
+                else
+                {
+                    $info = ['titulo'=>'ERROR','msg'=>'No fue posible crear la Cuenta del cliente para registrar la compra al crédito.','class'=>'error'];
+                    Session::flash('mensaje',$info);
+                }
+
+                return redirect(url('factura/crearFactura'));
             }
 
             return view('modulos.factura.nuevaFactura',get_defined_vars());

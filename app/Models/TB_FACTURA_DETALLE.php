@@ -16,7 +16,7 @@ class TB_FACTURA_DETALLE extends Model
 
     public function Articulo()
     {
-        return $this->belongsTo('App\Models\TB_ARTICULO','id_movimiento','id');
+        return $this->belongsTo('App\Models\TB_ARTICULO','id_articulo','id');
     }
 
     public function MovimentoInventario()
